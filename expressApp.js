@@ -85,24 +85,19 @@ app.post('/vehicles', (req, res) => {
 
 app.put('/vehicles/:id', (req, res) => {
     const id = Number(req.params.id);
-
     const index = vehicles.findIndex(v => v.id === id);
-
     if (index === -1) {
         return res.status(404).json({
             message: "Vehicle not found"
         });
     }
-
     const updatedVehicle = req.body;
-
     const requiredFields = [
         "vehicleName",
         "vehicleNumber",
         "type",
         "price"
     ];
-
     if (
         !updatedVehicle ||
         typeof updatedVehicle !== "object" ||
@@ -117,13 +112,11 @@ app.put('/vehicles/:id', (req, res) => {
             message: "Missing required fields"
         });
     }
-
     if (typeof updatedVehicle.price !== "number" || updatedVehicle.price <= 0) {
         return res.status(400).json({
             message: "Price must be a positive number"
         });
     }
-
     vehicles[index] = {
         id: id,
         vehicleName: updatedVehicle.vehicleName,
@@ -131,7 +124,6 @@ app.put('/vehicles/:id', (req, res) => {
         type: updatedVehicle.type,
         price: updatedVehicle.price
     };
-
     res.status(200).json({
         message: "Vehicle updated successfully",
         vehicle: vehicles[index]
