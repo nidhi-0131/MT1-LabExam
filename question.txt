@@ -1,0 +1,6 @@
+Develop a Vehicle Management Web Application to maintain vehicle records using Node.js and
+Express.js.
+The application must demonstrate the working of the Node.js HTTP module, routing, handling
+different HTTP methods, serving static files using the FS module and implementing REST APIs using
+the Express.js framework.
+You are required to implement the application in separate modules as described below.
