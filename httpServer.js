@@ -25,7 +25,7 @@ const vehicles = [
     }
 ];
 
-const homePage = fs.readFileSync('./index.html', 'utf-8');
+const homePage = fs.readFileSync('./home.html', 'utf-8');
 
 const server = http.createServer((req, res) => {
     if(req.url === "/") {
@@ -87,11 +87,28 @@ const server = http.createServer((req, res) => {
             }
         });
     } else if (req.url === "/about") {
-        res.end("Hello from About Page")
+        res.writeHead(200, {
+            'Content-Type': 'text/plain'
+        });
+        res.end("Welcome to Vehicle Management Application");
     } else if (req.url === "/info") {
-        res.end("Hello from Info Page")
+        fs.readFile('./public/info.html', 'utf-8', (err, data) => {
+            if (err) {
+                res.writeHead(500, {
+                    'Content-Type': 'text/plain'
+                });
+                return res.end("Internal Server Error: Unable to read file");
+            }
+            res.writeHead(200, {
+                'Content-Type': 'text/html'
+            });
+            res.end(data);
+        });
     } else {
-        res.end("404 Page Not Found")
+        res.writeHead(404, {
+            'Content-Type': 'text/plain'
+        });
+        res.end("404 Page Not Found");
     }
 });
 
