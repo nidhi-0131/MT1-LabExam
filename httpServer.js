@@ -1,6 +1,30 @@
 import http from 'http';
 import fs from 'fs';
 
+const vehicles = [
+    {
+        id: 1,
+        vehicleName: "Swift",
+        vehicleNumber: "UP16AB1234",
+        type: "Hatchback",
+        price: 700000
+    },
+    {
+        id: 2,
+        vehicleName: "Carens",
+        vehicleNumber: "UP16CD5678",
+        type: "MUV",
+        price: 1500000
+    },
+    {
+        id: 3,
+        vehicleName: "Nexon",
+        vehicleNumber: "UP16EF9012",
+        type: "SUV",
+        price: 900000
+    }
+];
+
 const homePage = fs.readFileSync('./index.html', 'utf-8');
 
 const server = http.createServer((req, res) => {
@@ -13,38 +37,55 @@ const server = http.createServer((req, res) => {
         res.writeHead(200, {
             'Content-Type': 'application/json'
         });
-        res.end(JSON.stringify([
-            {
-                _id: 1,
-                Vehicle_Name: "Swift",
-                Company: "Maruti Suzuki",
-                Price: 700000
-            },
-            {
-                _id: 2,
-                Vehicle_Name: "Carens",
-                Company: "Kia",
-                Price: 1500000
-            },
-            {
-                _id: 3,
-                Vehicle_Name: "Nexon",
-                Company: "Tata Motors",
-                Price: 900000
-            },
-            {
-                _id: 4,
-                Vehicle_Name: "Creta",
-                Company: "Hyundai",
-                Price: 1100000
-            },
-            {
-                _id: 5,
-                Vehicle_Name: "Thar",
-                Company: "Mahindra",
-                Price: 1200000
+        res.end(JSON.stringify(vehicles));
+    } else if (req.method === "POST" && req.url === "/add-vehicle") {
+        let body = "";
+        req.on('data', (chunk) => {
+            body += chunk.toString();
+        });
+        req.on('end', () => {
+            try {
+                const newVehicle = JSON.parse(body);
+                const requiredFields = [
+                    "id",
+                    "vehicleName",
+                    "vehicleNumber",
+                    "type",
+                    "price"
+                ];
+                if (
+                    newVehicle === null || typeof newVehicle !== "object" ||
+                    Array.isArray(newVehicle) || 
+                    requiredFields.some(field =>
+                        newVehicle[field] === undefined ||
+                        newVehicle[field] === null ||
+                        newVehicle[field] === ""
+                    )
+                ) {
+                    res.writeHead(400, {
+                        'Content-Type': 'application/json'
+                    });
+                    return res.end(JSON.stringify({
+                        message: "Missing required fields"
+                    }));
+                }
+                vehicles.push(newVehicle);
+                res.writeHead(201, {
+                    'Content-Type': 'application/json'
+                });
+                res.end(JSON.stringify({
+                    message: "Vehicle added successfully",
+                    vehicle: newVehicle
+                }));
+            } catch (error) {
+                res.writeHead(400, {
+                    'Content-Type': 'application/json'
+                });
+                res.end(JSON.stringify({
+                    message: "Invalid JSON data"
+                }));
             }
-        ]));
+        });
     } else if (req.url === "/about") {
         res.end("Hello from About Page")
     } else if (req.url === "/info") {
