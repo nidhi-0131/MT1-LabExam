@@ -43,6 +43,46 @@ app.get('/vehicles/:id', (req, res) => {
     res.status(200).json(vehicle);
 });
 
+app.post('/vehicles', (req, res) => {
+    const newVehicle = req.body;
+    const requiredFields = [
+        "id",
+        "vehicleName",
+        "vehicleNumber",
+        "type",
+        "price"
+    ];
+    if (
+        !newVehicle ||
+        typeof newVehicle !== "object" ||
+        Array.isArray(newVehicle) ||
+        requiredFields.some(field =>
+            newVehicle[field] === undefined ||
+            newVehicle[field] === null ||
+            newVehicle[field] === ""
+        )
+    ) {
+        return res.status(400).json({
+            message: "Missing required fields"
+        });
+    }
+    if (typeof newVehicle.price !== "number" || newVehicle.price <= 0) {
+        return res.status(400).json({
+            message: "Price must be a positive number"
+        });
+    }
+    if (vehicles.some(v => v.id === newVehicle.id)) {
+        return res.status(400).json({
+            message: "Vehicle ID already exists"
+        });
+    }
+    vehicles.push(newVehicle);
+    res.status(201).json({
+        message: "Vehicle added successfully",
+        vehicle: newVehicle
+    });
+});
+
 app.listen(4000, () => {
     console.log('Express Server running at http://localhost:4000');
 });
