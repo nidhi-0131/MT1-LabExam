@@ -83,6 +83,61 @@ app.post('/vehicles', (req, res) => {
     });
 });
 
+app.put('/vehicles/:id', (req, res) => {
+    const id = Number(req.params.id);
+
+    const index = vehicles.findIndex(v => v.id === id);
+
+    if (index === -1) {
+        return res.status(404).json({
+            message: "Vehicle not found"
+        });
+    }
+
+    const updatedVehicle = req.body;
+
+    const requiredFields = [
+        "vehicleName",
+        "vehicleNumber",
+        "type",
+        "price"
+    ];
+
+    if (
+        !updatedVehicle ||
+        typeof updatedVehicle !== "object" ||
+        Array.isArray(updatedVehicle) ||
+        requiredFields.some(field =>
+            updatedVehicle[field] === undefined ||
+            updatedVehicle[field] === null ||
+            updatedVehicle[field] === ""
+        )
+    ) {
+        return res.status(400).json({
+            message: "Missing required fields"
+        });
+    }
+
+    if (typeof updatedVehicle.price !== "number" || updatedVehicle.price <= 0) {
+        return res.status(400).json({
+            message: "Price must be a positive number"
+        });
+    }
+
+    vehicles[index] = {
+        id: id,
+        vehicleName: updatedVehicle.vehicleName,
+        vehicleNumber: updatedVehicle.vehicleNumber,
+        type: updatedVehicle.type,
+        price: updatedVehicle.price
+    };
+
+    res.status(200).json({
+        message: "Vehicle updated successfully",
+        vehicle: vehicles[index]
+    });
+});
+
 app.delete('/vehicles/:id', (req, res) => {
     const id = Number(req.params.id);
     const index = vehicles.findIndex(v => v.id === id);
@@ -95,6 +150,12 @@ app.delete('/vehicles/:id', (req, res) => {
     res.status(200).json({
         message: "Vehicle deleted successfully",
         vehicle: deletedVehicle[0]
+    });
+});
+
+app.use((req, res) => {
+    res.status(404).json({
+        message: "Route not found"
     });
 });
 
