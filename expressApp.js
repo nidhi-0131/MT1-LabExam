@@ -32,3 +32,13 @@ app.get('/vehicles', (req, res) => {
     res.status(200).json(vehicles);
 });
 
+app.get('/vehicles/:id', (req, res) => {
+    const id = Number(req.params.id);
+    const vehicle = vehicles.find(v => v.id === id);
+    if (!vehicle) {
+        return res.status(404).json({
+            message: "Vehicle not found"
+        });
+    }
+    res.status(200).json(vehicle);
+});
