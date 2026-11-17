@@ -3,25 +3,25 @@ import fs from 'fs';
 
 const vehicles = [
     {
-        id: 1,
-        vehicleName: "Swift",
-        vehicleNumber: "UP16AB1234",
-        type: "Hatchback",
-        price: 700000
+        "id": 1,
+        "vehicleName": "Hyundai Creta",
+        "vehicleNumber": "HR26AB1234",
+        "type": "SUV",
+        "price": 1500000
     },
     {
-        id: 2,
-        vehicleName: "Carens",
-        vehicleNumber: "UP16CD5678",
-        type: "MUV",
-        price: 1500000
+        "id": 2,
+        "vehicleName": "Kia Carens",
+        "vehicleNumber": "UP16CD5678",
+        "type": "MUV",
+        "price": 1500000
     },
     {
-        id: 3,
-        vehicleName: "Nexon",
-        vehicleNumber: "UP16EF9012",
-        type: "SUV",
-        price: 900000
+        "id": 3,
+        "vehicleName": "Tata Nexon",
+        "vehicleNumber": "UP16EF9012",
+        "type": "SUV",
+        "price": 900000
     }
 ];
 
