@@ -42,3 +42,7 @@ app.get('/vehicles/:id', (req, res) => {
     }
     res.status(200).json(vehicle);
 });
+
+app.listen(4000, () => {
+    console.log('Express Server running at http://localhost:4000');
+});
