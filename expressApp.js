@@ -83,6 +83,21 @@ app.post('/vehicles', (req, res) => {
     });
 });
 
+app.delete('/vehicles/:id', (req, res) => {
+    const id = Number(req.params.id);
+    const index = vehicles.findIndex(v => v.id === id);
+    if (index === -1) {
+        return res.status(404).json({
+            message: "Vehicle not found"
+        });
+    }
+    const deletedVehicle = vehicles.splice(index, 1);
+    res.status(200).json({
+        message: "Vehicle deleted successfully",
+        vehicle: deletedVehicle[0]
+    });
+});
+
 app.listen(4000, () => {
     console.log('Express Server running at http://localhost:4000');
 });
